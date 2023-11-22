@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DefaultNamespace;
+using Enemies;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -16,11 +17,11 @@ public class Weapon : MonoBehaviour
 
     private Quaternion _targetRotation;
 
-    private Enemy[] _enemies;
+    private EnemiesSpawner _enemiesSpawner;
 
     private void Awake()
     {
-        _enemies = FindObjectsByType<Enemy>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        _enemiesSpawner = FindAnyObjectByType<EnemiesSpawner>();
     }
 
     public void Attack()
@@ -48,9 +49,10 @@ public class Weapon : MonoBehaviour
     private void Update()
     {
         var minDistance = float.MaxValue;
-        for (var i = 0; i < _enemies.Length; i++)
+        var enemies = _enemiesSpawner.AliveEnemies;
+        for (var i = 0; i < enemies.Count; i++)
         {
-            var enemy = _enemies[i];
+            var enemy = enemies[i];
             if (!enemy.IsAlive) continue;
 
             var distance = Vector2.Distance(enemy.transform.position, transform.position);

@@ -22,11 +22,6 @@ public class Player : MonoBehaviour
         _weapon.OnAnimationAttack();
     }
     
-    private void Awake()
-    {
-        _playerInput.actions["Attack"].performed += OnAttackPressed;
-    }
-
     private void Update()
     {
         ReadInput();
@@ -38,6 +33,11 @@ public class Player : MonoBehaviour
         else if(_moveInput.x > 0)
         {
             _isLookingLeft = false;
+        }
+
+        if (_moveInput.magnitude == 0)
+        {
+            _weapon.Attack();
         }
 
         _sr.flipX = _isLookingLeft;
@@ -53,10 +53,5 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         _rb.velocity = _moveInput * _speed * Time.fixedDeltaTime;
-    }
-    
-    private void OnAttackPressed(InputAction.CallbackContext obj)
-    {
-        _weapon.Attack();
     }
 }
