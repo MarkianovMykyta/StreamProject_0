@@ -10,6 +10,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float _attackCooldown;
     [SerializeField] private CircleCollider2D _damageZone;
     [SerializeField] private int _damage;
+    [SerializeField] private Player.Player _player;
 
     private float _nextAttackTime;
 
@@ -26,13 +27,18 @@ public class Weapon : MonoBehaviour
 
     public void Attack()
     {
+        if(!gameObject.activeSelf) return;
         if (Time.time < _nextAttackTime) return;
-
-
+        
         _nextAttackTime = Time.time + _attackCooldown;
 
         _animator.ResetTrigger("Attack");
         _animator.SetTrigger("Attack");
+    }
+
+    public void ResetCooldownTime()
+    {
+        _nextAttackTime = Time.time + _attackCooldown;
     }
 
     public void OnAnimationAttack()
@@ -42,7 +48,10 @@ public class Weapon : MonoBehaviour
         foreach (var collider in colliders)
         {
             var destructable = collider.GetComponent<IDestructable>();
-            destructable?.Attack(_damage);
+            if (destructable != _player)
+            {
+                destructable?.ApplyDamage(_damage);
+            }
         }
     }
 

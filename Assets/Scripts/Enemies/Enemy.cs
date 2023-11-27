@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DefaultNamespace;
+using Enemies;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDestructable
 {
     public event Action<Enemy> Died; 
+    public event Action<IDestructable> OnHealthChanged;
     
     [SerializeField] private GameObject _tomb;
     [SerializeField] private int _maxHealth;
@@ -13,15 +15,19 @@ public class Enemy : MonoBehaviour, IDestructable
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private Animator _animator;
     [SerializeField] private SpriteRenderer _sr;
+    [SerializeField] private EnemyWeapon _weapon;
+    [SerializeField] private float _attackIdleTime;
     
-    private Player _player;
+    private Player.Player _player;
     
     public int Health { get; private set; }
     public bool IsAlive => Health > 0;
     private bool _isLookingLeft;
+
+    private float _lastAttackTime;
     
 
-    public void Attack(int damage)
+    public void ApplyDamage(int damage)
     {
         if(!IsAlive) return;
         
@@ -31,20 +37,49 @@ public class Enemy : MonoBehaviour, IDestructable
             Health = 0;
             Die();
         }
+        
+        OnHealthChanged?.Invoke(this);
+    }
+
+    public void OnAnimationAttack()
+    {
+        _weapon.OnAnimationAttackTriggered();
     }
     
     private void Awake()
     {
-        _player = FindAnyObjectByType<Player>();
+        _player = FindAnyObjectByType<Player.Player>();
 
         Health = _maxHealth;
         
         _animator.SetBool("Move", true);
     }
 
+    private void Update()
+    {
+        if (_weapon.Attack())
+        {
+            _lastAttackTime = Time.time;
+        }
+    }
+
     private void FixedUpdate()
     {
         if(!IsAlive) return;
+        
+        if (_player == null || !_player.IsAlive)
+        {
+            Stop();
+            return;
+        }
+        
+        if (Time.time - _lastAttackTime < _attackIdleTime)
+        {
+            Stop();
+            return;
+        }
+       
+        _animator.SetBool("Move", true);
         
         var moveDirection = _player.transform.position - transform.position;
 
@@ -60,6 +95,12 @@ public class Enemy : MonoBehaviour, IDestructable
         _sr.flipX = _isLookingLeft;
         
         _rb.velocity = moveDirection.normalized * _moveSpeed * Time.fixedDeltaTime;
+    }
+
+    private void Stop()
+    {
+        _animator.SetBool("Move", false);
+        _rb.velocity = Vector2.zero;
     }
 
     private async void Die()

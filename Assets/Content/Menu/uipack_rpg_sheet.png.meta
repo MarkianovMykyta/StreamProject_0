@@ -185,6 +185,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Grey_Panel
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 328
+        width: 45
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 12, y: 6, z: 12, w: 5}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f19d5d403baaed479de1b8a26c0cb6a
+      internalID: -18009783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -198,6 +219,7 @@ TextureImporter:
     nameFileIdTable:
       Button_Image: -2014861259
       Circle_Button: 619639703
+      Grey_Panel: -18009783
       Sword_Image: 789543009
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private EnemiesSpawner _enemiesSpawner;
-    [SerializeField] private Player _player;
+    [SerializeField] private Player.Player _player;
     [SerializeField] private Menu.Menu _menu;
 
     private void Awake()

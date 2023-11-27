@@ -1,9 +1,13 @@
-﻿namespace DefaultNamespace
+﻿using System;
+
+namespace DefaultNamespace
 {
     public interface IDestructable
     {
+        public event Action<IDestructable> OnHealthChanged;  
+        
         bool IsAlive { get; }
         int Health { get; }
-        void Attack(int damage);
+        void ApplyDamage(int damage);
     }
 }
