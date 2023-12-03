@@ -8,6 +8,7 @@ namespace DefaultNamespace
         
         bool IsAlive { get; }
         int Health { get; }
+        int MaxHealth { get; }
         void ApplyDamage(int damage);
     }
 }

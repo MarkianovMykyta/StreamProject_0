@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour, IDestructable
     private Player.Player _player;
     
     public int Health { get; private set; }
+    public int MaxHealth => _maxHealth;
     public bool IsAlive => Health > 0;
     private bool _isLookingLeft;
 
@@ -57,6 +58,8 @@ public class Enemy : MonoBehaviour, IDestructable
 
     private void Update()
     {
+        if(!IsAlive) return;
+        
         if (_weapon.Attack())
         {
             _lastAttackTime = Time.time;
@@ -110,7 +113,15 @@ public class Enemy : MonoBehaviour, IDestructable
         _rb.velocity = Vector3.zero;
         _animator.SetTrigger("Die");
         Instantiate(_tomb, transform.position, Quaternion.identity);
-        await Task.Delay(TimeSpan.FromSeconds(1));
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1), destroyCancellationToken);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return;
+        }
         Destroy(gameObject);
     }
 }

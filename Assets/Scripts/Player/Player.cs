@@ -23,6 +23,7 @@ namespace Player
 
         public bool IsAlive => Health > 0;
         public int Health { get; private set; }
+        public int MaxHealth => _maxHealth;
     
         private void Awake()
         {

@@ -5,13 +5,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private EnemiesSpawner _enemiesSpawner;
-    [SerializeField] private Player.Player _player;
+    [SerializeField] private GameObject _playerRoot;
     [SerializeField] private Menu.Menu _menu;
 
     private void Awake()
     {
         _enemiesSpawner.gameObject.SetActive(false);
-        _player.gameObject.SetActive(false);
+        _playerRoot.SetActive(false);
 
         _menu.PlayClicked += OnPlayClicked;
     }
@@ -24,6 +24,6 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
         _enemiesSpawner.gameObject.SetActive(true);
-        _player.gameObject.SetActive(true);
+        _playerRoot.SetActive(true);
     }
 }
